@@ -20,11 +20,16 @@
 
 #include <Sodaq_RN2483.h>
 
-// MBili
-//#define debugSerial Serial
+#define DEVICE_MBILI
+#define DEVICE_AUTONOMO
 
-// Autonomo
-#define debugSerial SerialUSB
+#ifdef DEVICE_MBILI
+  #define debugSerial Serial
+#endif
+
+#ifdef DEVICE_AUTONOMO
+  #define debugSerial SerialUSB
+#endif
 
 #define loraSerial Serial1
 
@@ -33,7 +38,6 @@ const uint8_t devAddr[4] =
 	0x02, 0x01, 0x59, 0x00
 };
 
-// USE YOUR OWN KEYS!
 const uint8_t appSKey[16] =
 {
 	0x2B, 0x7E, 0x15, 0x16,
@@ -42,7 +46,6 @@ const uint8_t appSKey[16] =
 	0x09, 0xCF, 0x4F, 0x3C
 };
 
-// USE YOUR OWN KEYS!
 const uint8_t nwkSKey[16] =
 {
   0x2B, 0x7E, 0x15, 0x16,
@@ -59,12 +62,12 @@ uint8_t testPayload[] =
 void setup()
 {
 	debugSerial.begin(57600);
+
+  #ifdef DEVICE_AUTONOMO
+    digitalWrite(BEE_VCC, HIGH);
+	#endif
+  
 	loraSerial.begin(LoRaBee.getDefaultBaudRate());
-
-  // as the modem on my laptop keep changing i need some time to switch on the serial monitoring
-  delay(20000);
-
-  debugSerial.println("Setting Up Network");
 
 	LoRaBee.setDiag(debugSerial); // optional
 	if (LoRaBee.initABP(loraSerial, devAddr, appSKey, nwkSKey, true))
@@ -130,8 +133,19 @@ void loop()
 		default:
 			break;
 		}
-		delay(5000);
+		delay(4800);
+    blinkLed(1,200);
 	}
-
 	while (1) { } // block forever
 }
+
+void blinkLed(int times, int len) {
+  for (uint8_t i = times; i > 0; i--) {
+    digitalWrite(13, HIGH);
+    delay(len/2);   
+    digitalWrite(13, LOW);  
+    delay(len/2);
+  }
+}
+
+

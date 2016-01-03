@@ -21,32 +21,34 @@
 #include <Sodaq_RN2483.h>
 
 // MBili
-#define debugSerial Serial
+//#define debugSerial Serial
+
 // Autonomo
-//#define debugSerial SerialUSB
+#define debugSerial SerialUSB
+
 #define loraSerial Serial1
 
 const uint8_t devAddr[4] =
 {
-	0x00, 0x1A, 0x62, 0xAE
+	0x02, 0x01, 0x59, 0x00
 };
 
 // USE YOUR OWN KEYS!
 const uint8_t appSKey[16] =
 {
-	0x0D, 0x0E, 0x0A, 0x0D,
-	0x0B, 0x0E, 0x0E, 0x0F,
-	0x0C, 0x0A, 0x0F, 0x0E,
-	0x0B, 0x0A, 0x0B, 0x0E,
+	0x2B, 0x7E, 0x15, 0x16,
+	0x28, 0xAE, 0xD2, 0xA6, 
+	0xAB, 0xF7, 0x15, 0x88, 
+	0x09, 0xCF, 0x4F, 0x3C
 };
 
 // USE YOUR OWN KEYS!
 const uint8_t nwkSKey[16] =
 {
-	0x0D, 0x0E, 0x0A, 0x0D,
-	0x0B, 0x0E, 0x0E, 0x0F,
-	0x0C, 0x0A, 0x0F, 0x0E,
-	0x0B, 0x0A, 0x0B, 0x0E,
+  0x2B, 0x7E, 0x15, 0x16,
+  0x28, 0xAE, 0xD2, 0xA6, 
+  0xAB, 0xF7, 0x15, 0x88, 
+  0x09, 0xCF, 0x4F, 0x3C
 };
 
 uint8_t testPayload[] =
@@ -58,6 +60,11 @@ void setup()
 {
 	debugSerial.begin(57600);
 	loraSerial.begin(LoRaBee.getDefaultBaudRate());
+
+  // as the modem on my laptop keep changing i need some time to switch on the serial monitoring
+  delay(20000);
+
+  debugSerial.println("Setting Up Network");
 
 	LoRaBee.setDiag(debugSerial); // optional
 	if (LoRaBee.initABP(loraSerial, devAddr, appSKey, nwkSKey, true))
@@ -85,7 +92,7 @@ void loop()
 	{
 		testPayload[0] = i; // change first byte
 
-		switch (LoRaBee.sendReqAck(1, testPayload, 5, 3))
+		switch (LoRaBee.send(1, testPayload, 5))
 		{
 		case NoError:
 			debugSerial.println("Successful transmission.");

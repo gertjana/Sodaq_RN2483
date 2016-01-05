@@ -33,11 +33,13 @@
 
 #define loraSerial Serial1
 
+// CHANGE TO YOUR REGISTERED ADDRESS
 const uint8_t devAddr[4] =
 {
 	0x02, 0x01, 0x59, 0x00
 };
 
+// CHANGE TO YOUR OWN KEY
 const uint8_t appSKey[16] =
 {
 	0x2B, 0x7E, 0x15, 0x16,
@@ -46,6 +48,7 @@ const uint8_t appSKey[16] =
 	0x09, 0xCF, 0x4F, 0x3C
 };
 
+// CHANGE TO YOUR OWN KEY
 const uint8_t nwkSKey[16] =
 {
   0x2B, 0x7E, 0x15, 0x16,

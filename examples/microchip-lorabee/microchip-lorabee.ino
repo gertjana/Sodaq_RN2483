@@ -66,8 +66,9 @@ void setup()
 {
 	debugSerial.begin(57600);
 
-  #ifdef DEVICE_AUTONOMO
-    digitalWrite(BEE_VCC, HIGH);
+	// Turns device on for autonomo
+  	#ifdef DEVICE_AUTONOMO
+    		digitalWrite(BEE_VCC, HIGH);
 	#endif
   
 	loraSerial.begin(LoRaBee.getDefaultBaudRate());
